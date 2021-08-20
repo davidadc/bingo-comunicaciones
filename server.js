@@ -67,7 +67,6 @@ io.on('connection', (socket) => {
     ) {
       possibleCards.push([b, i, n, g, o]);
       possibleCardsStrings.push(stringBingo);
-      selectedCards.push(stringBingo);
     }
   }
 
