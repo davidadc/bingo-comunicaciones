@@ -35,12 +35,14 @@ const selectedCards = [];
 const listedNumbers = [];
 
 const getBingoNumber = (bingoNumbers) => {
-  return bingoNumbers.splice(Math.floor(Math.random() * bingoNumbers.length), 1).shift();
+  return bingoNumbers
+    .splice(Math.floor(Math.random() * bingoNumbers.length), 1)
+    .shift();
 };
 
 let interval;
 
-const getNumberAndEmit = socket => {
+const getNumberAndEmit = (socket) => {
   if (!bingoNumbers.length) {
     clearInterval(interval);
     console.log('Listed numbers:', listedNumbers);
