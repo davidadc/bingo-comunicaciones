@@ -32,6 +32,28 @@ const io = socket(server, {
 
 const playersToStartGame = 3;
 const selectedCards = [];
+const listedNumbers = [];
+
+const getBingoNumber = (bingoNumbers) => {
+  return bingoNumbers.splice(Math.floor(Math.random() * bingoNumbers.length), 1).shift();
+};
+
+let interval;
+
+const getNumberAndEmit = socket => {
+  if (!bingoNumbers.length) {
+    clearInterval(interval);
+    console.log('Listed numbers:', listedNumbers);
+    return;
+  }
+
+  const number = getBingoNumber(bingoNumbers);
+
+  listedNumbers.push(number);
+  console.log('Listed number:', number, 'Remain numbers', bingoNumbers.length);
+
+  socket.emit('bingo:callNumber', number);
+};
 
 io.on('connection', (socket) => {
   const clientsCount = io.engine.clientsCount;
@@ -68,6 +90,11 @@ io.on('connection', (socket) => {
       possibleCards.push([b, i, n, g, o]);
       possibleCardsStrings.push(stringBingo);
     }
+  }
+
+  if (clientsCount === playersToStartGame) {
+    // Initialize bingo count
+    interval = setInterval(() => getNumberAndEmit(socket), 500);
   }
 
   socket.emit('cards:options', possibleCards);

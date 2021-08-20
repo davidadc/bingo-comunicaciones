@@ -17,9 +17,17 @@ function App() {
       setCards(data);
     };
 
+    const listedNumbers = (data) => {
+      console.log(data)
+    }
+
     if (socket) {
       socket.on('cards:options', cardsOptions);
-      return () => socket.off('cards:options', cardsOptions);
+      socket.on('bingo:callNumber', listedNumbers);
+      return () => {
+        socket.off('cards:options', cardsOptions);
+        socket.off('bingo:callNumber', listedNumbers);
+      }
     }
   }, [socket]);
 
