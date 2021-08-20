@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
   AppBar,
   Button,
@@ -6,9 +7,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import { io } from 'socket.io-client';
-
-import './styles.scss';
-import { useEffect, useState } from 'react';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,6 +49,7 @@ const Header = ({ socket, setSocket }) => {
         <Typography variant="h6" className={classes.title}>
           Bingo
         </Typography>
+
         {!socket && (
           <Button variant="outlined" onClick={onClick}>
             Unirse al juego

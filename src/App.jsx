@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
+import { Container } from '@material-ui/core';
 
 // Components
 import Header from './layout/header';
+import SelectBingoCards from './components/SelectBingoCards';
 
 // Styles
 import './App.css';
@@ -22,9 +24,11 @@ function App() {
   }, [socket]);
 
   return (
-    <div className="App">
+    <Container className="App">
       <Header socket={socket} setSocket={setSocket} />
-    </div>
+
+      {cards.length === 3 && <SelectBingoCards cards={cards} />}
+    </Container>
   );
 }
 
