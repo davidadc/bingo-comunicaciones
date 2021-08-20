@@ -61,6 +61,7 @@ const getNumberAndEmit = () => {
 io.on('connection', (socket) => {
   const clientsCount = io.engine.clientsCount;
   console.log('Socket connection opened:', socket.id);
+  console.log('IP:', socket.handshake.address);
   console.log('Total connections:', clientsCount);
 
   io.sockets.emit('players:count', clientsCount);
