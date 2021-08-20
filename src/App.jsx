@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // Components
 import Header from './layout/header';
@@ -8,6 +8,17 @@ import './App.css';
 
 function App() {
   const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    const boards = (data) => {
+      console.log(data);
+    };
+
+    if (socket) {
+      socket.on('boards:options', boards);
+      return () => socket.off('boards:options', boards);
+    }
+  }, [socket]);
 
   return (
     <div className="App">

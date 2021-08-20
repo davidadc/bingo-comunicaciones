@@ -43,7 +43,7 @@ io.on('connection', (socket) => {
   const possibleBoards = [];
   const possibleBoardsStrings = [];
 
-  while (possibleBoards < 3) {
+  while (possibleBoardsStrings.length < 3) {
     const b = between(1, 15, 5);
     const i = between(16, 30, 5);
     const n = between(31, 45, 4);
@@ -65,9 +65,11 @@ io.on('connection', (socket) => {
       possibleBoardsStrings.indexOf(stringBingo) === -1 &&
       selectedBoards.indexOf(stringBingo) === -1
     ) {
-      possibleBoards.push(stringBingo);
+      possibleBoards.push([b, i, n, g, o]);
+      possibleBoardsStrings.push(stringBingo);
+      selectedBoards.push(stringBingo);
     }
   }
 
-  socket.emit('boards:options', 4);
+  socket.emit('boards:options', possibleBoards);
 });
