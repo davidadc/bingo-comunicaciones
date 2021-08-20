@@ -25,7 +25,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "back:dev": "nodemon server.js",
-    "start:prod": "node server.js"
+    "back:prod": "node server.js"
   },
   "eslintConfig": {
     "extends": [
