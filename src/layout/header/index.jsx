@@ -28,7 +28,6 @@ const Header = ({ socket, setSocket }) => {
 
   useEffect(() => {
     const playersListener = (data) => {
-      console.log(data);
       setPlayers(data);
     };
 

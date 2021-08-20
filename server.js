@@ -31,7 +31,7 @@ const io = socket(server, {
 });
 
 const playersToStartGame = 3;
-const selectedBoards = [];
+const selectedCards = [];
 
 io.on('connection', (socket) => {
   const clientsCount = io.engine.clientsCount;
@@ -40,10 +40,10 @@ io.on('connection', (socket) => {
 
   io.sockets.emit('players:count', clientsCount);
 
-  const possibleBoards = [];
-  const possibleBoardsStrings = [];
+  const possibleCards = [];
+  const possibleCardsStrings = [];
 
-  while (possibleBoardsStrings.length < 3) {
+  while (possibleCardsStrings.length < 3) {
     const b = between(1, 15, 5);
     const i = between(16, 30, 5);
     const n = between(31, 45, 4);
@@ -62,14 +62,14 @@ io.on('connection', (socket) => {
       o.toString();
 
     if (
-      possibleBoardsStrings.indexOf(stringBingo) === -1 &&
-      selectedBoards.indexOf(stringBingo) === -1
+      possibleCardsStrings.indexOf(stringBingo) === -1 &&
+      selectedCards.indexOf(stringBingo) === -1
     ) {
-      possibleBoards.push([b, i, n, g, o]);
-      possibleBoardsStrings.push(stringBingo);
-      selectedBoards.push(stringBingo);
+      possibleCards.push([b, i, n, g, o]);
+      possibleCardsStrings.push(stringBingo);
+      selectedCards.push(stringBingo);
     }
   }
 
-  socket.emit('boards:options', possibleBoards);
+  socket.emit('cards:options', possibleCards);
 });

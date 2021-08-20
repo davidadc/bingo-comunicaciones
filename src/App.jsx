@@ -8,15 +8,16 @@ import './App.css';
 
 function App() {
   const [socket, setSocket] = useState(null);
+  const [cards, setCards] = useState([]);
 
   useEffect(() => {
-    const boards = (data) => {
-      console.log(data);
+    const cardsOptions = (data) => {
+      setCards(data);
     };
 
     if (socket) {
-      socket.on('boards:options', boards);
-      return () => socket.off('boards:options', boards);
+      socket.on('cards:options', cardsOptions);
+      return () => socket.off('cards:options', cardsOptions);
     }
   }, [socket]);
 
