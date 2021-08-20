@@ -6,6 +6,8 @@ const app = express();
 // Socket IO
 const socket = require('socket.io');
 
+const between = require('./utils/random-numbers');
+
 // settings
 app.set('port', process.env.PORT || 3002);
 
@@ -23,17 +25,49 @@ const bingoNumbers = Array(75)
 
 const io = socket(server, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: '*',
     methods: ['GET', 'POST'],
   },
 });
 
 const playersToStartGame = 3;
+const selectedBoards = [];
 
 io.on('connection', (socket) => {
   const clientsCount = io.engine.clientsCount;
   console.log('Socket connection opened:', socket.id);
   console.log('Total connections:', clientsCount);
 
-  io.sockets.emit('bingo:players', clientsCount);
+  io.sockets.emit('players:count', clientsCount);
+
+  const possibleBoards = [];
+  const possibleBoardsStrings = [];
+
+  while (possibleBoards < 3) {
+    const b = between(1, 15, 5);
+    const i = between(16, 30, 5);
+    const n = between(31, 45, 4);
+    const g = between(46, 60, 5);
+    const o = between(61, 75, 5);
+
+    const stringBingo =
+      b.toString() +
+      ',' +
+      i.toString() +
+      ',' +
+      n.toString() +
+      ',' +
+      g.toString() +
+      ',' +
+      o.toString();
+
+    if (
+      possibleBoardsStrings.indexOf(stringBingo) === -1 &&
+      selectedBoards.indexOf(stringBingo) === -1
+    ) {
+      possibleBoards.push(stringBingo);
+    }
+  }
+
+  socket.emit('boards:options', 4);
 });

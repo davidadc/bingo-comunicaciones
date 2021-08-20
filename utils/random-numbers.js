@@ -4,10 +4,12 @@ const between = (min, max, length) => {
   while (array.length < length) {
     const number = Math.floor(Math.random() * (max - min + 1) + min);
 
-    if (array.indexOf(number) !== -1) array.push(number);
+    if (array.indexOf(number) === -1) {
+      array.push(number);
+    }
   }
 
-  array.sort();
+  array.sort((a, b) => a - b);
 
   return array;
 };

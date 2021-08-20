@@ -28,14 +28,15 @@ const Header = ({ socket, setSocket }) => {
 
   useEffect(() => {
     const playersListener = (data) => {
+      console.log(data);
       setPlayers(data);
     };
 
     if (socket) {
-      socket.on('bingo:players', playersListener);
+      socket.on('players:count', playersListener);
 
       return () => {
-        socket.off('bingo:players', playersListener);
+        socket.off('players:count', playersListener);
       };
     }
   }, [socket]);
