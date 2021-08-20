@@ -43,7 +43,7 @@ const getBingoNumber = (bingoNumbers) => {
 
 let interval;
 
-const getNumberAndEmit = (socket) => {
+const getNumberAndEmit = () => {
   if (!bingoNumbers.length) {
     clearInterval(interval);
     console.log('Listed numbers:', listedNumbers);

@@ -25,9 +25,9 @@ const SelectBingoCards = ({ cards }) => {
       </Grid>
 
       <Grid item xs={12}>
-        <Grid container>
+        <Grid container justifyContent={'space-between'}>
           {cards.map((card) => (
-            <Grid item xs={4}>
+            <Grid item xs={12} md={4} lg={3}>
               <BingoCard card={card} />
             </Grid>
           ))}

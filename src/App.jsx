@@ -33,7 +33,7 @@ function App() {
   }, [socket]);
 
   return (
-    <Container className="App">
+    <Container className="App" maxWidth={'xl'}>
       <Header socket={socket} setSocket={setSocket} />
 
       {cards.length === 3 && <SelectBingoCards cards={cards} />}
