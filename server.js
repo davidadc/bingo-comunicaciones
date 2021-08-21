@@ -47,18 +47,18 @@ const getBingoNumber = (bingoNumbers) => {
 
 const getBingoNumberInterval = () => {
   const interval = setInterval(() => getNumberAndEmit(interval), 11000);
-}
+};
 
 const getBingoStartTimerInterval = () => {
   let timer = 11;
   const interval = setInterval(() => {
-    io.sockets.emit('game:time', timer -= 1);
-    console.log(timer)
+    io.sockets.emit('game:time', (timer -= 1));
+    console.log(timer);
     if (timer === 0) {
       clearInterval(interval);
     }
   }, 1000);
-}
+};
 
 const getNumberAndEmit = (interval) => {
   if (!remainingBingoNumbers.length) {
@@ -70,7 +70,12 @@ const getNumberAndEmit = (interval) => {
   const number = getBingoNumber(remainingBingoNumbers);
 
   listedNumbers.push(number);
-  console.log('Listed number:', number, 'Remain numbers', remainingBingoNumbers.length);
+  console.log(
+    'Listed number:',
+    number,
+    'Remain numbers',
+    remainingBingoNumbers.length,
+  );
 
   io.sockets.emit('bingo:callNumber', number);
 };
