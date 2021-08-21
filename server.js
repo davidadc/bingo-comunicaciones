@@ -45,9 +45,22 @@ const getBingoNumber = (bingoNumbers) => {
     .shift();
 };
 
-let interval;
+const getBingoNumberInterval = () => {
+  const interval = setInterval(() => getNumberAndEmit(interval), 11000);
+}
 
-const getNumberAndEmit = () => {
+const getBingoStartTimerInterval = () => {
+  let timer = 11;
+  const interval = setInterval(() => {
+    io.sockets.emit('game:time', timer -= 1);
+    console.log(timer)
+    if (timer === 0) {
+      clearInterval(interval);
+    }
+  }, 1000);
+}
+
+const getNumberAndEmit = (interval) => {
   if (!remainingBingoNumbers.length) {
     clearInterval(interval);
     console.log('Listed numbers:', listedNumbers);
@@ -89,7 +102,8 @@ io.on('connection', (socket) => {
 
     // Initialize bingo count
     if (selectedCards.length >= playersToStartGame) {
-      interval = setInterval(() => getNumberAndEmit(socket), 500);
+      getBingoStartTimerInterval();
+      getBingoNumberInterval();
     }
   });
 
