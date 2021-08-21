@@ -12,6 +12,7 @@ const generateCards = require('./utils/generate-cards');
 const cardToString = require('./utils/card-to-string');
 const checkSelectedNumbers = require('./utils/check-selected-numbers');
 const hasWinningLine = require('./utils/check-horizontal-or-vertical-lines');
+const getDiagonals = require('./utils/get-diagonal-lines');
 
 // Settings
 app.set('port', process.env.PORT || 3002);
@@ -143,9 +144,18 @@ io.on('connection', (socket) => {
       listedNumbers,
     );
 
+    const diagonalLines = getDiagonals(userCard);
+
+    const isDiagonalWinner = hasWinningLine(
+      selected,
+      diagonalLines,
+      listedNumbers,
+    );
+
     console.log('User', userId, ' called Bingo.');
     console.log('Vertical winner', isVerticalWinner);
     console.log('Horizontal winner', isHorizontalWinner);
+    console.log('Diagonal winner', isDiagonalWinner);
   });
 
   socket.on('disconnect', () => {
