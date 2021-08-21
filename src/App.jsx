@@ -30,6 +30,7 @@ function App() {
   const [bingoNumbers, setBingoNumbers] = useState([]);
   const [showCountdown, setShowCountdown] = useState(false);
   const [countdown, setCountdown] = useState(0);
+  const [selectedNumbers, setSelectedNumbers] = useState([]);
 
   useEffect(() => {
     const cardsOptions = (data) => {
@@ -107,7 +108,12 @@ function App() {
                   justifyContent={'center'}
                   className={classes.onlyRow}
                 >
-                  <BingoCard card={myCard} />
+                  <BingoCard
+                    card={myCard}
+                    isSelected
+                    setSelectedNumbers={setSelectedNumbers}
+                    selectedNumbers={selectedNumbers}
+                  />
                 </Grid>
               </>
             )}

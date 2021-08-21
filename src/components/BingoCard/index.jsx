@@ -16,9 +16,17 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     margin: '2.5px',
   },
+  selected: {
+    backgroundColor: 'rgb(0 58 245 / 51%)',
+  },
 }));
 
-const BingoCard = ({ card }) => {
+const BingoCard = ({
+  card,
+  isSelected,
+  selectedNumbers,
+  setSelectedNumbers,
+}) => {
   const classes = useStyles();
   const bingo = ['B', 'I', 'N', 'G', 'O'];
 
@@ -30,6 +38,22 @@ const BingoCard = ({ card }) => {
   const transposeCard = Object.keys(newCard[0]).map((colNumber) =>
     newCard.map((rowNumber) => rowNumber[colNumber]),
   );
+
+  const onClick = (number) => {
+    if (number === 0) {
+      return;
+    }
+
+    if (isSelected) {
+      setSelectedNumbers((prevState) => {
+        if (prevState.indexOf(number) === -1) {
+          return [...prevState, number];
+        } else {
+          return prevState.filter((value) => value !== number);
+        }
+      });
+    }
+  };
 
   return (
     <Card variant="outlined" className={classes.root}>
@@ -49,7 +73,19 @@ const BingoCard = ({ card }) => {
             return (
               <Grid container justifyContent={'center'}>
                 {column.map((value, index) => (
-                  <Grid key={index} item xs={2} className={classes.cell}>
+                  <Grid
+                    key={index}
+                    item
+                    xs={2}
+                    className={`${classes.cell} ${
+                      isSelected
+                        ? selectedNumbers.indexOf(value) !== -1
+                          ? classes.selected
+                          : ''
+                        : ''
+                    }`}
+                    onClick={() => onClick(value)}
+                  >
                     {value === 0 ? <span>Free</span> : <span>{value}</span>}
                   </Grid>
                 ))}

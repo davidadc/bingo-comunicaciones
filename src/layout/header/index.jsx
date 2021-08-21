@@ -58,19 +58,17 @@ const Header = ({ socket, setSocket }) => {
         )}
 
         {socket && (
-          <>
-            <Typography variant="h6">
-              {players < neededPlayers ? (
-                <span>
-                  Jugadores necesarios para empezar el juego:{' '}
-                  {neededPlayers - players}
-                </span>
-              ) : (
-                <span>El juego comenzará cuando todos tengan sus cartones</span>
-              )}{' '}
-              | Cantidad de jugadores en línea: {players}
-            </Typography>
-          </>
+          <Typography variant="h6">
+            {players < neededPlayers ? (
+              <span>
+                Jugadores necesarios para empezar el juego:{' '}
+                {neededPlayers - players}
+              </span>
+            ) : (
+              <span>El juego comenzará cuando todos tengan sus cartones</span>
+            )}{' '}
+            | Cantidad de jugadores en línea: {players}
+          </Typography>
         )}
       </Toolbar>
     </AppBar>
