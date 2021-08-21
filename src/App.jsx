@@ -4,6 +4,7 @@ import { Container, Grid, makeStyles, Typography } from '@material-ui/core';
 // Components
 import Header from './layout/header';
 import SelectBingoCards from './components/SelectBingoCards';
+import ListBingoNumbers from './components/ListBingoNumbers';
 
 // Styles
 import './App.css';
@@ -26,6 +27,7 @@ function App() {
   const [socket, setSocket] = useState(null);
   const [cards, setCards] = useState([]);
   const [myCard, setMyCard] = useState(null);
+  const [bingoNumbers, setBingoNumbers] = useState([]);
 
   useEffect(() => {
     const cardsOptions = (data) => {
@@ -33,7 +35,7 @@ function App() {
     };
 
     const listedNumbers = (data) => {
-      console.log(data);
+      setBingoNumbers((prevState) => [...prevState, data]);
     };
 
     if (socket) {
@@ -86,6 +88,12 @@ function App() {
               </>
             )}
           </Grid>
+
+          {myCard && (
+            <Grid item xs={12}>
+              <ListBingoNumbers bingoNumbers={bingoNumbers} />
+            </Grid>
+          )}
         </Grid>
       </div>
     </Container>
