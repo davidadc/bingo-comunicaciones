@@ -65,7 +65,6 @@ const Header = ({
     socket.emit('bingo:callBingo', {
       userId,
       selected: selectedNumbers,
-      card: myCard,
     });
   };
 
