@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SelectBingoCards = ({ cards, setMyCard, socket }) => {
+const SelectBingoCards = ({ cards, setMyCard, socket, userId }) => {
   const classes = useStyles();
 
   const onClick = (card) => {
@@ -22,7 +22,7 @@ const SelectBingoCards = ({ cards, setMyCard, socket }) => {
       card[2].splice(2, 1);
     }
 
-    socket.emit('card:selected', { userId: '123', card });
+    socket.emit('card:selected', { userId, card });
     setMyCard(card);
   };
 

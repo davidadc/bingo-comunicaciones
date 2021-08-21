@@ -7,6 +7,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { io } from 'socket.io-client';
+import { v4 as uuidv4 } from 'uuid';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,6 +27,8 @@ const Header = ({
   gameStarted,
   selectedNumbers,
   myCard,
+  setUserId,
+  userId,
 }) => {
   const classes = useStyles();
   const [players, setPlayers] = useState(0);
@@ -46,8 +49,12 @@ const Header = ({
   }, [socket]);
 
   const onClick = () => {
-    const newSocket = io(process.env.REACT_APP_WS_ENDPOINT);
+    const newUserId = uuidv4();
+    const newSocket = io(process.env.REACT_APP_WS_ENDPOINT, {
+      query: { userId: newUserId },
+    });
     setSocket(newSocket);
+    setUserId(newUserId);
   };
 
   const callBingo = () => {
@@ -56,7 +63,7 @@ const Header = ({
     }
 
     socket.emit('bingo:callBingo', {
-      userId: '1',
+      userId,
       selected: selectedNumbers,
       card: myCard,
     });
@@ -67,6 +74,7 @@ const Header = ({
       <Toolbar>
         <Typography variant="h6" className={classes.title}>
           Bingo
+          {socket && <span> | User Id: {userId}</span>}
         </Typography>
 
         {!socket && (

@@ -84,6 +84,7 @@ io.on('connection', (socket) => {
   const clientsCount = io.engine.clientsCount;
   console.log('Socket connection opened:', socket.id);
   console.log('IP:', socket.handshake.address);
+  console.log('User ID:', socket.handshake.query?.userId);
   console.log('Total connections:', clientsCount);
 
   // Count of players
@@ -98,11 +99,14 @@ io.on('connection', (socket) => {
 
   // Card Selected
   socket.on('card:selected', function (data) {
-    // console.log('data', data);
     const cardString = cardToString(data?.card);
 
     if (selectedCards.indexOf(cardString) === -1) {
       selectedCards.push(cardString);
+      selectedCardsMapped[data?.userId] = {
+        card: data?.card,
+        cardString,
+      };
     }
 
     // Initialize bingo count

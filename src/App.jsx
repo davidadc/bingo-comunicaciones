@@ -32,6 +32,7 @@ function App() {
   const [countdown, setCountdown] = useState(0);
   const [selectedNumbers, setSelectedNumbers] = useState([]);
   const [gameStarted, setGameStarted] = useState(false);
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     const cardsOptions = (data) => {
@@ -76,6 +77,8 @@ function App() {
         gameStarted={gameStarted}
         selectedNumbers={selectedNumbers}
         myCard={myCard}
+        userId={userId}
+        setUserId={setUserId}
       />
 
       <div>
@@ -105,6 +108,7 @@ function App() {
                 cards={cards}
                 setMyCard={setMyCard}
                 socket={socket}
+                userId={userId}
               />
             )}
 
