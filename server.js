@@ -48,7 +48,7 @@ const getBingoNumber = (bingoNumbers) => {
 };
 
 const getBingoNumberInterval = () => {
-  const interval = setInterval(() => getNumberAndEmit(interval), 250);
+  const interval = setInterval(() => getNumberAndEmit(interval), 11000);
 };
 
 const getBingoStartTimerInterval = () => {
@@ -59,7 +59,7 @@ const getBingoStartTimerInterval = () => {
     if (timer === 0) {
       clearInterval(interval);
     }
-  }, 100);
+  }, 1000);
 };
 
 const getNumberAndEmit = (interval) => {
