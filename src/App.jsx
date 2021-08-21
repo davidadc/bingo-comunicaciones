@@ -15,6 +15,8 @@ const useStyles = makeStyles((theme) => ({
   },
   margin: {
     marginTop: '20px',
+    display: 'flex',
+    justifyContent: 'center',
   },
 }));
 
@@ -71,7 +73,18 @@ function App() {
               />
             )}
 
-            {myCard && <BingoCard card={myCard} />}
+            {myCard && (
+              <>
+                <Grid
+                  item
+                  xs={4}
+                  justifyContent={'center'}
+                  className={classes.onlyRow}
+                >
+                  <BingoCard card={myCard} />
+                </Grid>
+              </>
+            )}
           </Grid>
         </Grid>
       </div>
