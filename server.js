@@ -91,4 +91,8 @@ io.on('connection', (socket) => {
       interval = setInterval(() => getNumberAndEmit(socket), 500);
     }
   });
+
+  socket.on('disconnect', () => {
+    io.sockets.emit('players:count', io.engine.clientsCount);
+  });
 });
