@@ -28,6 +28,8 @@ function App() {
   const [cards, setCards] = useState([]);
   const [myCard, setMyCard] = useState(null);
   const [bingoNumbers, setBingoNumbers] = useState([]);
+  const [showCountdown, setShowCountdown] = useState(false);
+  const [countdown, setCountdown] = useState(0);
 
   useEffect(() => {
     const cardsOptions = (data) => {
@@ -38,13 +40,27 @@ function App() {
       setBingoNumbers((prevState) => [...prevState, data]);
     };
 
+    const gameTime = (data) => {
+      if (data === 10) {
+        setShowCountdown(true);
+      }
+
+      if (data === 0) {
+        setShowCountdown(false);
+      }
+
+      setCountdown(data);
+    };
+
     if (socket) {
       socket.on('cards:options', cardsOptions);
       socket.on('bingo:callNumber', listedNumbers);
+      socket.on('game:time', gameTime);
 
       return () => {
         socket.off('cards:options', cardsOptions);
         socket.off('bingo:callNumber', listedNumbers);
+        socket.off('game:time', gameTime);
       };
     }
   }, [socket]);
@@ -60,6 +76,14 @@ function App() {
           alignContent={'center'}
           className={classes.root}
         >
+          {showCountdown && (
+            <Grid item xs={12}>
+              <Typography variant="h4" align="center">
+                El juego comenzará en {countdown}
+              </Typography>
+            </Grid>
+          )}
+
           <Grid item xs={12}>
             <Typography variant="h3" align="center">
               Bingo
