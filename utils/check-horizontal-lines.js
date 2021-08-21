@@ -2,15 +2,15 @@ const isValidSelectedNumber = require('./check-selected-number');
 
 const isVerticalWinningLine = (
   selectedNumbers,
-  horizontalLine,
+  verticalLine,
   currentNumbers,
 ) => {
-  return horizontalLine.every((horizontalElement) => {
-    if (!selectedNumbers.includes(horizontalElement)) {
+  return verticalLine.every((verticalElement) => {
+    if (!selectedNumbers.includes(verticalElement)) {
       return false;
     }
 
-    if (!isValidSelectedNumber(horizontalElement, currentNumbers)) {
+    if (!isValidSelectedNumber(verticalElement, currentNumbers)) {
       return false;
     }
 
@@ -20,12 +20,8 @@ const isVerticalWinningLine = (
 
 const hasVerticalWinningLine = (selectedNumbers, card, currentNumbers) => {
   console.log(selectedNumbers, card);
-  const winningLines = card.filter((horizontalLine) => {
-    return isVerticalWinningLine(
-      selectedNumbers,
-      horizontalLine,
-      currentNumbers,
-    );
+  const winningLines = card.filter((verticalLine) => {
+    return isVerticalWinningLine(selectedNumbers, verticalLine, currentNumbers);
   });
 
   console.log('Winning vertical lines array', winningLines);
