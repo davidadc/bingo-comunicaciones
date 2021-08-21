@@ -114,12 +114,7 @@ function App() {
 
             {myCard && (
               <>
-                <Grid
-                  item
-                  xs={4}
-                  justifyContent={'center'}
-                  className={classes.onlyRow}
-                >
+                <Grid item xs={4} className={classes.onlyRow}>
                   <BingoCard
                     card={myCard}
                     isSelected

@@ -28,8 +28,8 @@ const SelectBingoCards = ({ cards, setMyCard, socket, userId }) => {
 
   return (
     <Grid container justifyContent={'space-between'}>
-      {cards.map((card) => (
-        <Grid item xs={12} md={4} lg={3} className={classes.item}>
+      {cards.map((card, index) => (
+        <Grid key={index} item xs={12} md={4} lg={3} className={classes.item}>
           <BingoCard card={card} />
           <Button
             variant="outlined"

@@ -69,12 +69,12 @@ const BingoCard = ({
         </Grid>
 
         <Grid item xs={12}>
-          {transposeCard.map((column) => {
+          {transposeCard.map((column, index) => {
             return (
-              <Grid container justifyContent={'center'}>
-                {column.map((value, index) => (
+              <Grid container key={index} justifyContent={'center'}>
+                {column.map((value, subIndex) => (
                   <Grid
-                    key={index}
+                    key={subIndex}
                     item
                     xs={2}
                     className={`${classes.cell} ${
