@@ -37,6 +37,7 @@ const playersToStartGame = parseInt(process.env.REACT_APP_NEEDED_PLAYERS);
 const selectedCards = [];
 const selectedCardsMapped = {};
 const listedNumbers = [];
+const remainingBingoNumbers = [...bingoNumbers];
 
 const getBingoNumber = (bingoNumbers) => {
   return bingoNumbers
@@ -47,16 +48,16 @@ const getBingoNumber = (bingoNumbers) => {
 let interval;
 
 const getNumberAndEmit = () => {
-  if (!bingoNumbers.length) {
+  if (!remainingBingoNumbers.length) {
     clearInterval(interval);
     console.log('Listed numbers:', listedNumbers);
     return;
   }
 
-  const number = getBingoNumber(bingoNumbers);
+  const number = getBingoNumber(remainingBingoNumbers);
 
   listedNumbers.push(number);
-  console.log('Listed number:', number, 'Remain numbers', bingoNumbers.length);
+  console.log('Listed number:', number, 'Remain numbers', remainingBingoNumbers.length);
 
   io.sockets.emit('bingo:callNumber', number);
 };
