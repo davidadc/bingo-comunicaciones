@@ -2,6 +2,7 @@ const path = require('path');
 const cors = require('cors');
 const express = require('express');
 const app = express();
+require('dotenv').config();
 
 // Socket IO
 const socket = require('socket.io');
@@ -31,7 +32,7 @@ const io = socket(server, {
   },
 });
 
-const playersToStartGame = 3;
+const playersToStartGame = parseInt(process.env.REACT_APP_NEEDED_PLAYERS);
 const selectedCards = [];
 const listedNumbers = [];
 

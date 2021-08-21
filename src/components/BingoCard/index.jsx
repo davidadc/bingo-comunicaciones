@@ -8,8 +8,10 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     textAlign: 'center',
   },
-  center: {
+  cell: {
+    border: '1px solid #000',
     textAlign: 'center',
+    margin: '2.5px',
   },
 }));
 
@@ -30,10 +32,9 @@ const BingoCard = ({ card }) => {
     <Card variant="outlined">
       <Grid container>
         <Grid item xs={12}>
-          <Grid container>
-            <Grid item xs={1} />
+          <Grid container justifyContent={'center'}>
             {bingo.map((value, index) => (
-              <Grid key={index} item xs={2} className={classes.center}>
+              <Grid key={index} item xs={2} className={classes.cell}>
                 {value}
               </Grid>
             ))}
@@ -41,12 +42,11 @@ const BingoCard = ({ card }) => {
         </Grid>
 
         <Grid item xs={12}>
-          {transposeCard.map((column, columnIndex) => {
+          {transposeCard.map((column) => {
             return (
-              <Grid container>
-                <Grid item xs={1} />
+              <Grid container justifyContent={'center'}>
                 {column.map((value, index) => (
-                  <Grid key={index} item xs={2} className={classes.center}>
+                  <Grid key={index} item xs={2} className={classes.cell}>
                     {value === 0 ? <span>Free</span> : <span>{value}</span>}
                   </Grid>
                 ))}
