@@ -31,6 +31,7 @@ function App() {
   const [showCountdown, setShowCountdown] = useState(false);
   const [countdown, setCountdown] = useState(0);
   const [selectedNumbers, setSelectedNumbers] = useState([]);
+  const [gameStarted, setGameStarted] = useState(false);
 
   useEffect(() => {
     const cardsOptions = (data) => {
@@ -47,6 +48,7 @@ function App() {
       }
 
       if (data === 0) {
+        setGameStarted(true);
         setShowCountdown(false);
       }
 
@@ -68,7 +70,13 @@ function App() {
 
   return (
     <Container className="App" maxWidth={'xl'}>
-      <Header socket={socket} setSocket={setSocket} />
+      <Header
+        socket={socket}
+        setSocket={setSocket}
+        gameStarted={gameStarted}
+        selectedNumbers={selectedNumbers}
+        myCard={myCard}
+      />
 
       <div>
         <Grid

@@ -20,7 +20,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Header = ({ socket, setSocket }) => {
+const Header = ({
+  socket,
+  setSocket,
+  gameStarted,
+  selectedNumbers,
+  myCard,
+}) => {
   const classes = useStyles();
   const [players, setPlayers] = useState(0);
   const neededPlayers = parseInt(process.env.REACT_APP_NEEDED_PLAYERS);
@@ -44,6 +50,18 @@ const Header = ({ socket, setSocket }) => {
     setSocket(newSocket);
   };
 
+  const callBingo = () => {
+    if (myCard[2][2] === 0) {
+      myCard[2].splice(2, 1);
+    }
+
+    socket.emit('bingo:callBingo', {
+      userId: '1',
+      selected: selectedNumbers,
+      card: myCard,
+    });
+  };
+
   return (
     <AppBar position="fixed" color="default">
       <Toolbar>
@@ -65,7 +83,17 @@ const Header = ({ socket, setSocket }) => {
                 {neededPlayers - players}
               </span>
             ) : (
-              <span>El juego comenzará cuando todos tengan sus cartones</span>
+              <>
+                {gameStarted ? (
+                  <Button variant="outlined" onClick={callBingo}>
+                    Cantar BINGO
+                  </Button>
+                ) : (
+                  <span>
+                    El juego comenzará cuando todos tengan sus cartones
+                  </span>
+                )}
+              </>
             )}{' '}
             | Cantidad de jugadores en línea: {players}
           </Typography>

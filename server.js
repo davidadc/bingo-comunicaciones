@@ -112,6 +112,10 @@ io.on('connection', (socket) => {
     }
   });
 
+  socket.on('bingo:callBingo', (data) => {
+    console.log(data);
+  });
+
   socket.on('disconnect', () => {
     io.sockets.emit('players:count', io.engine.clientsCount);
   });
