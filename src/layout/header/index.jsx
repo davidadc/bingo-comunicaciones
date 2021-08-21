@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
 const Header = ({ socket, setSocket }) => {
   const classes = useStyles();
   const [players, setPlayers] = useState(0);
+  const neededPlayers = parseInt(process.env.REACT_APP_NEEDED_PLAYERS);
 
   useEffect(() => {
     const playersListener = (data) => {
@@ -57,9 +58,17 @@ const Header = ({ socket, setSocket }) => {
         )}
 
         {socket && (
-          <Typography variant="h6">
-            Cantidad de jugadores en línea: {players}
-          </Typography>
+          <>
+            <Typography variant="h6">
+              {players < neededPlayers && (
+                <span>
+                  Jugadores necesarios para empezar el juego:{' '}
+                  {neededPlayers - players} |{' '}
+                </span>
+              )}
+              Cantidad de jugadores en línea: {players}
+            </Typography>
+          </>
         )}
       </Toolbar>
     </AppBar>
