@@ -41,6 +41,7 @@ const selectedCards = [];
 const selectedCardsMapped = {};
 const listedNumbers = [];
 const remainingBingoNumbers = [...bingoNumbers];
+let bingoNumberInterval;
 
 const getBingoNumber = (bingoNumbers) => {
   return bingoNumbers
@@ -49,7 +50,7 @@ const getBingoNumber = (bingoNumbers) => {
 };
 
 const getBingoNumberInterval = () => {
-  const interval = setInterval(() => getNumberAndEmit(interval), 11000);
+  bingoNumberInterval = setInterval(() => getNumberAndEmit(), 11000);
 };
 
 const getBingoStartTimerInterval = () => {
@@ -63,9 +64,9 @@ const getBingoStartTimerInterval = () => {
   }, 1000);
 };
 
-const getNumberAndEmit = (interval) => {
+const getNumberAndEmit = () => {
   if (!remainingBingoNumbers.length) {
-    clearInterval(interval);
+    clearInterval(bingoNumberInterval);
     console.log('Listed numbers:', listedNumbers);
     return;
   }
@@ -151,6 +152,17 @@ io.on('connection', (socket) => {
       diagonalLines,
       listedNumbers,
     );
+
+    if (isVerticalWinner || isHorizontalWinner || isDiagonalWinner) {
+      clearInterval(bingoNumberInterval);
+
+      socket.emit('player:winner', 'Ha ganado');
+
+      socket.broadcast.emit(
+        'players:winner',
+        `El jugador con id ${userId} ha ganado.`,
+      );
+    }
 
     console.log('User', userId, ' called Bingo.');
     console.log('Vertical winner', isVerticalWinner);

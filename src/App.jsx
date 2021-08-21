@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Container, Grid, makeStyles, Typography } from '@material-ui/core';
+import Swal from 'sweetalert2';
 
 // Components
 import Header from './layout/header';
@@ -56,15 +57,35 @@ function App() {
       setCountdown(data);
     };
 
+    const youWon = async (text) => {
+      await Swal.fire({
+        title: 'Ganaste',
+        type: 'success',
+        text,
+      });
+    };
+
+    const someoneWon = async (text) => {
+      await Swal.fire({
+        title: 'Ya hay un ganador',
+        type: 'success',
+        text,
+      });
+    };
+
     if (socket) {
       socket.on('cards:options', cardsOptions);
       socket.on('bingo:callNumber', listedNumbers);
       socket.on('game:time', gameTime);
+      socket.on('player:winner', youWon);
+      socket.on('players:winner', someoneWon);
 
       return () => {
         socket.off('cards:options', cardsOptions);
         socket.off('bingo:callNumber', listedNumbers);
         socket.off('game:time', gameTime);
+        socket.off('player:winner', youWon);
+        socket.off('players:winner', someoneWon);
       };
     }
   }, [socket]);
