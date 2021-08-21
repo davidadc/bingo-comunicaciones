@@ -73,11 +73,6 @@ io.on('connection', (socket) => {
   const possibleCards = [];
   const possibleCardsStrings = [];
 
-  if (clientsCount === playersToStartGame) {
-    // Initialize bingo count
-    interval = setInterval(() => getNumberAndEmit(socket), 500);
-  }
-
   // Send card options
   generateCards(possibleCards, possibleCardsStrings, selectedCards);
   socket.emit('cards:options', possibleCards);
@@ -89,6 +84,11 @@ io.on('connection', (socket) => {
 
     if (selectedCards.indexOf(cardString) === -1) {
       selectedCards.push(cardString);
+    }
+
+    // Initialize bingo count
+    if (selectedCards.length >= playersToStartGame) {
+      interval = setInterval(() => getNumberAndEmit(socket), 500);
     }
   });
 });
