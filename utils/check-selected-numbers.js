@@ -1,11 +1,5 @@
-const checkSelectedNumbers = (selectedNumbers, currentNumbers) => {
-  if (
-    selectedNumbers.length < 4 ||
-    selectedNumbers.length > currentNumbers.length
-  ) {
-    return false;
-  }
-  return true;
+const checkSelectedNumbers = (selectedNumbers) => {
+  return !(selectedNumbers < 4);
 };
 
 module.exports = checkSelectedNumbers;

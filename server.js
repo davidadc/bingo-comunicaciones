@@ -11,7 +11,7 @@ const socket = require('socket.io');
 const generateCards = require('./utils/generate-cards');
 const cardToString = require('./utils/card-to-string');
 const checkSelectedNumbers = require('./utils/check-selected-numbers');
-const hasVerticalWinningLine = require('./utils/check-horizontal-lines');
+const hasWinningLine = require('./utils/check-horizontal-or-vertical-lines');
 
 // Settings
 app.set('port', process.env.PORT || 3002);
@@ -121,17 +121,30 @@ io.on('connection', (socket) => {
   socket.on('bingo:callBingo', (data) => {
     const { userId, selected, card } = data;
 
-    if (!checkSelectedNumbers(selected, listedNumbers)) {
+    if (!checkSelectedNumbers(selected)) {
       return;
     }
 
-    const isVerticalWinner = hasVerticalWinningLine(
+    const userCard = selectedCardsMapped[userId]['card'];
+
+    const isVerticalWinner = hasWinningLine(selected, userCard, listedNumbers);
+
+    if (userCard[2][2] !== 0) {
+      userCard[2].splice(2, 0, 0);
+    }
+
+    const transposeCard = Object.keys(userCard[0]).map((colNumber) =>
+      userCard.map((rowNumber) => rowNumber[colNumber]),
+    );
+
+    const isHorizontalWinner = hasWinningLine(
       selected,
-      selectedCardsMapped[userId]['card'],
+      transposeCard,
       listedNumbers,
     );
 
-    console.log(isVerticalWinner);
+    console.log('Vertical winner', isVerticalWinner);
+    console.log('Horizontal winner', isHorizontalWinner);
   });
 
   socket.on('disconnect', () => {
