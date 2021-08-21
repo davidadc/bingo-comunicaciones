@@ -119,7 +119,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('bingo:callBingo', (data) => {
-    const { userId, selected, card } = data;
+    const { userId, selected } = data;
 
     if (!checkSelectedNumbers(selected)) {
       return;
@@ -127,11 +127,11 @@ io.on('connection', (socket) => {
 
     const userCard = selectedCardsMapped[userId]['card'];
 
-    const isVerticalWinner = hasWinningLine(selected, userCard, listedNumbers);
-
     if (userCard[2][2] !== 0) {
       userCard[2].splice(2, 0, 0);
     }
+
+    const isVerticalWinner = hasWinningLine(selected, userCard, listedNumbers);
 
     const transposeCard = Object.keys(userCard[0]).map((colNumber) =>
       userCard.map((rowNumber) => rowNumber[colNumber]),
@@ -143,6 +143,7 @@ io.on('connection', (socket) => {
       listedNumbers,
     );
 
+    console.log('User', userId, ' called Bingo.');
     console.log('Vertical winner', isVerticalWinner);
     console.log('Horizontal winner', isHorizontalWinner);
   });
