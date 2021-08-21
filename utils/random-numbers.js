@@ -9,8 +9,6 @@ const between = (min, max, length) => {
     }
   }
 
-  array.sort((a, b) => a - b);
-
   return array;
 };
 
