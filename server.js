@@ -10,6 +10,8 @@ const socket = require('socket.io');
 // Utils
 const generateCards = require('./utils/generate-cards');
 const cardToString = require('./utils/card-to-string');
+const checkSelectedNumbers = require('./utils/check-selected-numbers');
+const hasVerticalWinningLine = require('./utils/check-horizontal-lines');
 
 // Settings
 app.set('port', process.env.PORT || 3002);
@@ -117,7 +119,19 @@ io.on('connection', (socket) => {
   });
 
   socket.on('bingo:callBingo', (data) => {
-    console.log(data);
+    const { userId, selected, card } = data;
+
+    if (!checkSelectedNumbers(selected, listedNumbers)) {
+      return;
+    }
+
+    const isVerticalWinner = hasVerticalWinningLine(
+      selected,
+      selectedCardsMapped[userId]['card'],
+      listedNumbers,
+    );
+
+    console.log(isVerticalWinner);
   });
 
   socket.on('disconnect', () => {
