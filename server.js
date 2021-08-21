@@ -9,6 +9,7 @@ const socket = require('socket.io');
 
 // Utils
 const generateCards = require('./utils/generate-cards');
+const cardToString = require('./utils/card-to-string');
 
 // Settings
 app.set('port', process.env.PORT || 3002);
@@ -34,6 +35,7 @@ const io = socket(server, {
 
 const playersToStartGame = parseInt(process.env.REACT_APP_NEEDED_PLAYERS);
 const selectedCards = [];
+const selectedCardsMapped = {};
 const listedNumbers = [];
 
 const getBingoNumber = (bingoNumbers) => {
@@ -65,17 +67,28 @@ io.on('connection', (socket) => {
   console.log('IP:', socket.handshake.address);
   console.log('Total connections:', clientsCount);
 
+  // Count of players
   io.sockets.emit('players:count', clientsCount);
 
   const possibleCards = [];
   const possibleCardsStrings = [];
-
-  generateCards(possibleCards, possibleCardsStrings, selectedCards);
 
   if (clientsCount === playersToStartGame) {
     // Initialize bingo count
     interval = setInterval(() => getNumberAndEmit(socket), 500);
   }
 
+  // Send card options
+  generateCards(possibleCards, possibleCardsStrings, selectedCards);
   socket.emit('cards:options', possibleCards);
+
+  // Card Selected
+  socket.on('card:selected', function (data) {
+    // console.log('data', data);
+    const cardString = cardToString(data?.card);
+
+    if (selectedCards.indexOf(cardString) === -1) {
+      selectedCards.push(cardString);
+    }
+  });
 });

@@ -1,6 +1,9 @@
 import { Card, Grid, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    marginTop: '20px',
+  },
   numbersContainer: {
     display: 'flex',
   },
@@ -24,12 +27,12 @@ const BingoCard = ({ card }) => {
     newCard[2].splice(2, 0, 0);
   }
 
-  const transposeCard = Object.keys(card[0]).map((colNumber) =>
-    card.map((rowNumber) => rowNumber[colNumber]),
+  const transposeCard = Object.keys(newCard[0]).map((colNumber) =>
+    newCard.map((rowNumber) => rowNumber[colNumber]),
   );
 
   return (
-    <Card variant="outlined">
+    <Card variant="outlined" className={classes.root}>
       <Grid container>
         <Grid item xs={12}>
           <Grid container justifyContent={'center'}>

@@ -1,4 +1,4 @@
-import { Grid, makeStyles, Typography } from '@material-ui/core';
+import { Button, Grid, makeStyles, Typography } from '@material-ui/core';
 
 import BingoCard from '../BingoCard';
 
@@ -6,33 +6,40 @@ const useStyles = makeStyles((theme) => ({
   root: {
     height: '100vh',
   },
+  margin: {
+    marginTop: '20px',
+  },
+  item: {
+    textAlign: 'center',
+  },
 }));
 
-const SelectBingoCards = ({ cards }) => {
+const SelectBingoCards = ({ cards, setMyCard, socket }) => {
   const classes = useStyles();
 
-  return (
-    <Grid
-      container
-      alignItems={'center'}
-      alignContent={'center'}
-      className={classes.root}
-    >
-      <Grid item xs={12}>
-        <Typography variant="h3" align="center">
-          Bingo
-        </Typography>
-      </Grid>
+  const onClick = (card) => {
+    if (card[2][2] === 0) {
+      card[2].splice(2, 1);
+    }
 
-      <Grid item xs={12}>
-        <Grid container justifyContent={'space-between'}>
-          {cards.map((card) => (
-            <Grid item xs={12} md={4} lg={3}>
-              <BingoCard card={card} />
-            </Grid>
-          ))}
+    socket.emit('card:selected', { userId: '123', card });
+    setMyCard(card);
+  };
+
+  return (
+    <Grid container justifyContent={'space-between'}>
+      {cards.map((card) => (
+        <Grid item xs={12} md={4} lg={3} className={classes.item}>
+          <BingoCard card={card} />
+          <Button
+            variant="outlined"
+            color="inherit"
+            onClick={() => onClick(card)}
+          >
+            Seleccionar
+          </Button>
         </Grid>
-      </Grid>
+      ))}
     </Grid>
   );
 };

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container } from '@material-ui/core';
+import { Container, Grid, makeStyles, Typography } from '@material-ui/core';
 
 // Components
 import Header from './layout/header';
@@ -7,10 +7,23 @@ import SelectBingoCards from './components/SelectBingoCards';
 
 // Styles
 import './App.css';
+import BingoCard from './components/BingoCard';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    height: '100vh',
+  },
+  margin: {
+    marginTop: '20px',
+  },
+}));
 
 function App() {
+  const classes = useStyles();
+
   const [socket, setSocket] = useState(null);
   const [cards, setCards] = useState([]);
+  const [myCard, setMyCard] = useState(null);
 
   useEffect(() => {
     const cardsOptions = (data) => {
@@ -36,7 +49,32 @@ function App() {
     <Container className="App" maxWidth={'xl'}>
       <Header socket={socket} setSocket={setSocket} />
 
-      {cards.length === 3 && <SelectBingoCards cards={cards} />}
+      <div>
+        <Grid
+          container
+          alignItems={'center'}
+          alignContent={'center'}
+          className={classes.root}
+        >
+          <Grid item xs={12}>
+            <Typography variant="h3" align="center">
+              Bingo
+            </Typography>
+          </Grid>
+
+          <Grid item xs={12} className={classes.margin}>
+            {!myCard && (
+              <SelectBingoCards
+                cards={cards}
+                setMyCard={setMyCard}
+                socket={socket}
+              />
+            )}
+
+            {myCard && <BingoCard card={myCard} />}
+          </Grid>
+        </Grid>
+      </div>
     </Container>
   );
 }
