@@ -8,4 +8,8 @@ export const useStyles = makeStyles((theme) => ({
   center: {
     textAlign: 'center',
   },
+  scroll: {
+    height: '320px',
+    overflow: 'scroll',
+  },
 }));

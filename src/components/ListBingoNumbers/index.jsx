@@ -6,13 +6,13 @@ const ListBingoNumbers = ({ bingoNumbers }) => {
   const classes = useStyles();
 
   return (
-    <Grid container>
+    <Grid container className={classes.scroll}>
       <Grid item xs={12} className={classes.root}>
         Números cantados:
       </Grid>
 
-      {bingoNumbers.map((value) => (
-        <Grid item xs={2} className={classes.root}>
+      {bingoNumbers.map((value, index) => (
+        <Grid key={index} item xs={2} className={classes.root}>
           <span>{value}</span>
         </Grid>
       ))}
