@@ -1,4 +1,4 @@
-import { Button, Grid, makeStyles, Typography } from '@material-ui/core';
+import { Button, Grid, makeStyles } from '@material-ui/core';
 
 import BingoCard from '../BingoCard';
 
