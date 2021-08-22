@@ -107,7 +107,7 @@ const getBingoStartTimerInterval = () => {
 };
 
 io.on('connection', (socket) => {
-  if (timer < 10 && !isGameStarted) {
+  if (timer <= 11 && !isGameStarted) {
     timer = 11;
     clearInterval(countdownInterval);
   }
@@ -149,7 +149,15 @@ io.on('connection', (socket) => {
     }
 
     // Initialize bingo count
-    if (selectedCards.length >= playersToStartGame) {
+    if (
+      selectedCards.length >= playersToStartGame &&
+      selectedCards.length === io.engine.clientsCount &&
+      !isGameStarted
+    ) {
+      if (timer <= 11) {
+        timer = 11;
+        clearInterval(countdownInterval);
+      }
       getBingoStartTimerInterval();
     }
   });
