@@ -84,6 +84,20 @@ function App() {
       }
     };
 
+    const gameOver = (data) => {
+      if (data) {
+        Swal.fire({
+          title: 'Juego finalizado',
+          type: 'success',
+          text: 'El juego ha finalizado sin ningún ganador',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload();
+          }
+        });
+      }
+    };
+
     const setDisconnectionStatus = () => {
       setSocket(null);
     };
@@ -96,6 +110,7 @@ function App() {
       socket.on('players:winner', someoneWon);
       socket.on('game:wait', waitModal);
       socket.on('disconnect', setDisconnectionStatus);
+      socket.on('game:over', gameOver);
 
       return () => {
         socket.off('cards:options', cardsOptions);
@@ -105,6 +120,7 @@ function App() {
         socket.off('players:winner', someoneWon);
         socket.off('game:wait', waitModal);
         socket.off('disconnect', setDisconnectionStatus);
+        socket.off('game:over', gameOver);
       };
     }
   }, [socket]);

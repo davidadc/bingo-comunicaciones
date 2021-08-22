@@ -38,14 +38,25 @@ const io = socket(server, {
 
 // Global Variables
 const playersToStartGame = parseInt(process.env.REACT_APP_NEEDED_PLAYERS);
-const selectedCards = [];
-const selectedCardsMapped = {};
-const listedNumbers = [];
-const remainingBingoNumbers = [...bingoNumbers];
+let selectedCards = [];
+let selectedCardsMapped = {};
+let listedNumbers = [];
+let remainingBingoNumbers = [...bingoNumbers];
 let bingoNumberInterval = null;
 let countdownInterval = null;
 let timer = 11;
 let isGameStarted = false;
+
+const resetVariables = () => {
+  selectedCards = [];
+  selectedCardsMapped = {};
+  listedNumbers = [];
+  remainingBingoNumbers = [...bingoNumbers];
+  bingoNumberInterval = null;
+  countdownInterval = null;
+  timer = 11;
+  isGameStarted = false;
+};
 
 // Intervals
 const getBingoNumber = (bingoNumbers) => {
@@ -59,9 +70,11 @@ const getBingoNumberInterval = () => {
 
   const getNumberAndEmit = () => {
     if (!remainingBingoNumbers.length) {
-      isGameStarted = false;
       clearInterval(bingoNumberInterval);
       console.log('Listed numbers:', listedNumbers);
+      io.sockets.emit('game:over', true);
+      io.disconnectSockets();
+      resetVariables();
       return;
     }
 
@@ -141,7 +154,7 @@ io.on('connection', (socket) => {
   socket.on('bingo:callBingo', (data) => {
     const { userId, selected } = data;
 
-    if (!checkSelectedNumbers(selected)) {
+    if (!checkSelectedNumbers(selected) || !isGameStarted) {
       return;
     }
 
@@ -190,17 +203,18 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     io.sockets.emit('players:count', io.engine.clientsCount);
+    if (Object.keys(selectedCardsMapped).length > 0) {
+      const cardString =
+        selectedCardsMapped[socket.handshake.query?.userId]['cardString'];
+      const index = selectedCards.indexOf(cardString);
+      selectedCards.splice(index, 1);
 
-    const cardString =
-      selectedCardsMapped[socket.handshake.query?.userId]['cardString'];
-    const index = selectedCards.indexOf(cardString);
-    selectedCards.splice(index, 1);
+      delete selectedCardsMapped[socket.handshake.query?.userId];
 
-    delete selectedCardsMapped[socket.handshake.query?.userId];
-
-    if (selectedCards.length < playersToStartGame) {
-      timer = 11;
-      clearInterval(countdownInterval);
+      if (selectedCards.length < playersToStartGame) {
+        timer = 11;
+        clearInterval(countdownInterval);
+      }
     }
   });
 });
