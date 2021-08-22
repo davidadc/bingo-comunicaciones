@@ -120,7 +120,6 @@ io.on('connection', (socket) => {
   const clientsCount = io.engine.clientsCount;
   console.log('Socket connection opened:', socket.id);
   console.log('IP:', socket.handshake.address);
-  console.log('User ID:', socket.handshake.query?.userId);
   console.log('Total connections:', clientsCount);
 
   // Count of players
@@ -138,6 +137,7 @@ io.on('connection', (socket) => {
     const cardString = cardToString(data?.card);
 
     if (selectedCards.indexOf(cardString) === -1) {
+      socket.data.userId = data?.userId;
       selectedCards.push(cardString);
       selectedCardsMapped[data?.userId] = {
         card: data?.card,
@@ -204,13 +204,16 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     io.sockets.emit('players:count', io.engine.clientsCount);
     if (Object.keys(selectedCardsMapped).length > 0) {
-      const cardString =
-        selectedCardsMapped[socket.handshake.query?.userId]['cardString'];
-      const index = selectedCards.indexOf(cardString);
-      selectedCards.splice(index, 1);
+      try {
+        const cardString =
+          selectedCardsMapped[socket.data.userId]['cardString'];
+        const index = selectedCards.indexOf(cardString);
+        selectedCards.splice(index, 1);
 
-      delete selectedCardsMapped[socket.handshake.query?.userId];
-
+        delete selectedCardsMapped[socket.data.userId];
+      } catch (e) {
+        console.log(e);
+      }
       if (selectedCards.length < playersToStartGame) {
         timer = 11;
         clearInterval(countdownInterval);
