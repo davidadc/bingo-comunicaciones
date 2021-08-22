@@ -90,10 +90,18 @@ const Header = ({
         {socket && (
           <Typography variant="h6">
             {players < neededPlayers ? (
-              <span>
-                Jugadores necesarios para empezar el juego:{' '}
-                {neededPlayers - players}
-              </span>
+              <>
+                {gameStarted ? (
+                  <Button variant="outlined" onClick={callBingo}>
+                    Cantar BINGO
+                  </Button>
+                ) : (
+                  <span>
+                    Jugadores necesarios para empezar el juego:{' '}
+                    {neededPlayers - players}
+                  </span>
+                )}
+              </>
             ) : (
               <>
                 {gameStarted ? (
