@@ -50,7 +50,7 @@ function App() {
         setShowCountdown(true);
       }
 
-      if (data === 0) {
+      if (data === 1) {
         setGameStarted(true);
         setShowCountdown(false);
       }
