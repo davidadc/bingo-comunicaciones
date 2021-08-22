@@ -99,7 +99,7 @@ io.on('connection', (socket) => {
   }
   console.log('Is game started:', isGameStarted);
   if (isGameStarted) {
-    socket.emit('wait', true);
+    socket.emit('game:wait', true);
     socket.disconnect();
     return;
   }

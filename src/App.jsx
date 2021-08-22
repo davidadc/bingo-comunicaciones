@@ -94,7 +94,7 @@ function App() {
       socket.on('game:time', gameTime);
       socket.on('player:winner', youWon);
       socket.on('players:winner', someoneWon);
-      socket.on('wait', waitModal);
+      socket.on('game:wait', waitModal);
       socket.on('disconnect', setDisconnectionStatus);
 
       return () => {
@@ -103,7 +103,7 @@ function App() {
         socket.off('game:time', gameTime);
         socket.off('player:winner', youWon);
         socket.off('players:winner', someoneWon);
-        socket.off('wait', waitModal);
+        socket.off('game:wait', waitModal);
         socket.off('disconnect', setDisconnectionStatus);
       };
     }
