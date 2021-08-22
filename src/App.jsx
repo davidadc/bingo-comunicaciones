@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Container, Grid, makeStyles, Typography } from '@material-ui/core';
 import Swal from 'sweetalert2';
+import { decryptData } from './utils/crypto-data';
 
 // Components
 import Header from './layout/header';
@@ -38,19 +39,22 @@ function App() {
 
   useEffect(() => {
     const cardsOptions = (data) => {
+      data = decryptData(data);
       setCards(data);
     };
 
     const listedNumbers = (data) => {
+      data = decryptData(data);
       setBingoNumbers((prevState) => [...prevState, data]);
     };
 
     const gameTime = (data) => {
+      data = decryptData(data);
       if (data === 10) {
         setShowCountdown(true);
       }
 
-      if (data === 0) {
+      if (data === 1) {
         setGameStarted(true);
         setShowCountdown(false);
       }
@@ -59,6 +63,7 @@ function App() {
     };
 
     const youWon = async (text) => {
+      text = decryptData(text);
       await Swal.fire({
         title: 'Ganaste',
         type: 'success',
@@ -67,6 +72,7 @@ function App() {
     };
 
     const someoneWon = async (text) => {
+      text = decryptData(text);
       await Swal.fire({
         title: 'Ya hay un ganador',
         type: 'success',
@@ -75,6 +81,7 @@ function App() {
     };
 
     const waitModal = async (waitStatus) => {
+      waitStatus = decryptData(waitStatus);
       if (waitStatus) {
         await Swal.fire({
           title: 'Juego en curso',
@@ -85,6 +92,7 @@ function App() {
     };
 
     const gameOver = (data) => {
+      data = decryptData(data);
       if (data) {
         Swal.fire({
           title: 'Juego finalizado',

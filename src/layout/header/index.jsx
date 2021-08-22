@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core';
 import { io } from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid';
+import { encryptData, decryptData } from './../../utils/crypto-data';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,6 +38,7 @@ const Header = ({
 
   useEffect(() => {
     const playersListener = (data) => {
+      data = decryptData(data);
       setPlayers(data);
 
       if (data !== neededPlayers) {
@@ -67,10 +69,12 @@ const Header = ({
       myCard[2].splice(2, 1);
     }
 
-    socket.emit('bingo:callBingo', {
+    const data = encryptData({
       userId,
       selected: selectedNumbers,
     });
+
+    socket.emit('bingo:callBingo', data);
   };
 
   return (

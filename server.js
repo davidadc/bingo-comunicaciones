@@ -13,6 +13,7 @@ const cardToString = require('./utils/card-to-string');
 const checkSelectedNumbers = require('./utils/check-selected-numbers');
 const hasWinningLine = require('./utils/check-horizontal-or-vertical-lines');
 const getDiagonals = require('./utils/get-diagonal-lines');
+const { encryptData, decryptData } = require('./utils/crypto-data');
 
 // Settings
 app.set('port', process.env.PORT || 3002);
@@ -72,7 +73,7 @@ const getBingoNumberInterval = () => {
     if (!remainingBingoNumbers.length) {
       clearInterval(bingoNumberInterval);
       console.log('Listed numbers:', listedNumbers);
-      io.sockets.emit('game:over', true);
+      io.sockets.emit('game:over', encryptData(true));
       io.disconnectSockets();
       resetVariables();
       return;
@@ -88,7 +89,7 @@ const getBingoNumberInterval = () => {
       remainingBingoNumbers.length,
     );
 
-    io.sockets.emit('bingo:callNumber', number);
+    io.sockets.emit('bingo:callNumber', encryptData(number));
   };
 
   bingoNumberInterval = setInterval(() => getNumberAndEmit(), 10000);
@@ -96,7 +97,7 @@ const getBingoNumberInterval = () => {
 
 const getBingoStartTimerInterval = () => {
   countdownInterval = setInterval(() => {
-    io.sockets.emit('game:time', (timer -= 1));
+    io.sockets.emit('game:time', encryptData((timer -= 1)));
     console.log('Time to start:', timer);
     if (timer === 0) {
       clearInterval(countdownInterval);
@@ -112,7 +113,7 @@ io.on('connection', (socket) => {
   }
   console.log('Is game started:', isGameStarted);
   if (isGameStarted) {
-    socket.emit('game:wait', true);
+    socket.emit('game:wait', encryptData(true));
     socket.disconnect();
     return;
   }
@@ -123,17 +124,19 @@ io.on('connection', (socket) => {
   console.log('Total connections:', clientsCount);
 
   // Count of players
-  io.sockets.emit('players:count', clientsCount);
+  io.sockets.emit('players:count', encryptData(clientsCount));
 
   const possibleCards = [];
   const possibleCardsStrings = [];
 
   // Send card options
   generateCards(possibleCards, possibleCardsStrings, selectedCards);
-  socket.emit('cards:options', possibleCards);
+  socket.emit('cards:options', encryptData(possibleCards));
 
   // Card Selected
   socket.on('card:selected', function (data) {
+    data = decryptData(data);
+
     const cardString = cardToString(data?.card);
 
     if (selectedCards.indexOf(cardString) === -1) {
@@ -152,6 +155,8 @@ io.on('connection', (socket) => {
   });
 
   socket.on('bingo:callBingo', (data) => {
+    data = decryptData(data);
+
     const { userId, selected } = data;
 
     if (!checkSelectedNumbers(selected) || !isGameStarted) {
@@ -187,11 +192,11 @@ io.on('connection', (socket) => {
     if (isVerticalWinner || isHorizontalWinner || isDiagonalWinner) {
       clearInterval(bingoNumberInterval);
 
-      socket.emit('player:winner', 'Ha ganado');
+      socket.emit('player:winner', encryptData('Ha ganado'));
 
       socket.broadcast.emit(
         'players:winner',
-        `El jugador con id ${userId} ha ganado.`,
+        encryptData(`El jugador con id ${userId} ha ganado.`),
       );
     }
 
@@ -202,7 +207,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    io.sockets.emit('players:count', io.engine.clientsCount);
+    io.sockets.emit('players:count', encryptData(io.engine.clientsCount));
     if (Object.keys(selectedCardsMapped).length > 0) {
       try {
         const cardString =

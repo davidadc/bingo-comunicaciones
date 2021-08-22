@@ -1,6 +1,7 @@
 import { Button, Grid, makeStyles } from '@material-ui/core';
 
 import BingoCard from '../BingoCard';
+import { encryptData } from './../../utils/crypto-data';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,7 +23,9 @@ const SelectBingoCards = ({ cards, setMyCard, socket, userId }) => {
       card[2].splice(2, 1);
     }
 
-    socket.emit('card:selected', { userId, card });
+    const data = encryptData({ userId, card });
+
+    socket.emit('card:selected', data);
     setMyCard(card);
   };
 
