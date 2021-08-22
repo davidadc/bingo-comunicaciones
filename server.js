@@ -45,6 +45,7 @@ const remainingBingoNumbers = [...bingoNumbers];
 let bingoNumberInterval = null;
 let countdownInterval = null;
 let timer = 11;
+let isGameStarted = false;
 
 // Intervals
 const getBingoNumber = (bingoNumbers) => {
@@ -54,8 +55,11 @@ const getBingoNumber = (bingoNumbers) => {
 };
 
 const getBingoNumberInterval = () => {
+  isGameStarted = true;
+
   const getNumberAndEmit = () => {
     if (!remainingBingoNumbers.length) {
+      isGameStarted = false;
       clearInterval(bingoNumberInterval);
       console.log('Listed numbers:', listedNumbers);
       return;
@@ -89,9 +93,15 @@ const getBingoStartTimerInterval = () => {
 };
 
 io.on('connection', (socket) => {
-  if (timer < 10) {
+  if (timer < 10 && !isGameStarted) {
     timer = 11;
     clearInterval(countdownInterval);
+  }
+  console.log('Is game started:', isGameStarted);
+  if (isGameStarted) {
+    socket.emit('wait', true);
+    socket.disconnect();
+    return;
   }
 
   const clientsCount = io.engine.clientsCount;

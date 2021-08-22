@@ -14,6 +14,7 @@ import BingoCard from './components/BingoCard';
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100vh',
+    marginTop: '64px',
   },
   margin: {
     marginTop: '20px',
@@ -73,12 +74,28 @@ function App() {
       });
     };
 
+    const waitModal = async (waitStatus) => {
+      if (waitStatus) {
+        await Swal.fire({
+          title: 'Juego en curso',
+          type: 'success',
+          text: 'No puedes unirte a esta partida',
+        });
+      }
+    };
+
+    const setDisconnectionStatus = () => {
+      setSocket(null);
+    };
+
     if (socket) {
       socket.on('cards:options', cardsOptions);
       socket.on('bingo:callNumber', listedNumbers);
       socket.on('game:time', gameTime);
       socket.on('player:winner', youWon);
       socket.on('players:winner', someoneWon);
+      socket.on('wait', waitModal);
+      socket.on('disconnect', setDisconnectionStatus);
 
       return () => {
         socket.off('cards:options', cardsOptions);
@@ -86,6 +103,8 @@ function App() {
         socket.off('game:time', gameTime);
         socket.off('player:winner', youWon);
         socket.off('players:winner', someoneWon);
+        socket.off('wait', waitModal);
+        socket.off('disconnect', setDisconnectionStatus);
       };
     }
   }, [socket]);
