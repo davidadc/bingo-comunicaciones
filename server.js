@@ -36,13 +36,17 @@ const io = socket(server, {
   },
 });
 
+// Global Variables
 const playersToStartGame = parseInt(process.env.REACT_APP_NEEDED_PLAYERS);
 const selectedCards = [];
 const selectedCardsMapped = {};
 const listedNumbers = [];
 const remainingBingoNumbers = [...bingoNumbers];
-let bingoNumberInterval;
+let bingoNumberInterval = null;
+let countdownInterval = null;
+let timer = 11;
 
+// Intervals
 const getBingoNumber = (bingoNumbers) => {
   return bingoNumbers
     .splice(Math.floor(Math.random() * bingoNumbers.length), 1)
@@ -50,41 +54,46 @@ const getBingoNumber = (bingoNumbers) => {
 };
 
 const getBingoNumberInterval = () => {
-  bingoNumberInterval = setInterval(() => getNumberAndEmit(), 11000);
+  const getNumberAndEmit = () => {
+    if (!remainingBingoNumbers.length) {
+      clearInterval(bingoNumberInterval);
+      console.log('Listed numbers:', listedNumbers);
+      return;
+    }
+
+    const number = getBingoNumber(remainingBingoNumbers);
+
+    listedNumbers.push(number);
+    console.log(
+      'Listed number:',
+      number,
+      'Remain numbers',
+      remainingBingoNumbers.length,
+    );
+
+    io.sockets.emit('bingo:callNumber', number);
+  };
+
+  bingoNumberInterval = setInterval(() => getNumberAndEmit(), 10000);
 };
 
 const getBingoStartTimerInterval = () => {
-  let timer = 11;
-  const interval = setInterval(() => {
+  countdownInterval = setInterval(() => {
     io.sockets.emit('game:time', (timer -= 1));
-    console.log(timer);
+    console.log('Time to start:', timer);
     if (timer === 0) {
-      clearInterval(interval);
+      clearInterval(countdownInterval);
+      getBingoNumberInterval();
     }
   }, 1000);
 };
 
-const getNumberAndEmit = () => {
-  if (!remainingBingoNumbers.length) {
-    clearInterval(bingoNumberInterval);
-    console.log('Listed numbers:', listedNumbers);
-    return;
+io.on('connection', (socket) => {
+  if (timer < 10) {
+    timer = 11;
+    clearInterval(countdownInterval);
   }
 
-  const number = getBingoNumber(remainingBingoNumbers);
-
-  listedNumbers.push(number);
-  console.log(
-    'Listed number:',
-    number,
-    'Remain numbers',
-    remainingBingoNumbers.length,
-  );
-
-  io.sockets.emit('bingo:callNumber', number);
-};
-
-io.on('connection', (socket) => {
   const clientsCount = io.engine.clientsCount;
   console.log('Socket connection opened:', socket.id);
   console.log('IP:', socket.handshake.address);
@@ -116,7 +125,6 @@ io.on('connection', (socket) => {
     // Initialize bingo count
     if (selectedCards.length >= playersToStartGame) {
       getBingoStartTimerInterval();
-      getBingoNumberInterval();
     }
   });
 
@@ -172,5 +180,17 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     io.sockets.emit('players:count', io.engine.clientsCount);
+
+    const cardString =
+      selectedCardsMapped[socket.handshake.query?.userId]['cardString'];
+    const index = selectedCards.indexOf(cardString);
+    selectedCards.splice(index, 1);
+
+    delete selectedCardsMapped[socket.handshake.query?.userId];
+
+    if (selectedCards.length < playersToStartGame) {
+      timer = 11;
+      clearInterval(countdownInterval);
+    }
   });
 });

@@ -100,6 +100,7 @@ function App() {
         myCard={myCard}
         userId={userId}
         setUserId={setUserId}
+        setShowCountdown={setShowCountdown}
       />
 
       <div>

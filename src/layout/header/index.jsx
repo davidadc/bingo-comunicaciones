@@ -29,6 +29,7 @@ const Header = ({
   myCard,
   setUserId,
   userId,
+  setShowCountdown,
 }) => {
   const classes = useStyles();
   const [players, setPlayers] = useState(0);
@@ -37,6 +38,8 @@ const Header = ({
   useEffect(() => {
     const playersListener = (data) => {
       setPlayers(data);
+
+      setShowCountdown(false);
     };
 
     if (socket) {
