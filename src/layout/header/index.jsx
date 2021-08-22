@@ -39,7 +39,9 @@ const Header = ({
     const playersListener = (data) => {
       setPlayers(data);
 
-      setShowCountdown(false);
+      if (data !== neededPlayers) {
+        setShowCountdown(false);
+      }
     };
 
     if (socket) {
