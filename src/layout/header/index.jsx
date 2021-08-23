@@ -57,14 +57,13 @@ const Header = ({
 
   const onClick = () => {
     const newUserId = uuidv4();
-    const socketUrl =
-      process.env.NODE_ENV === 'development'
-        ? 'http://localhost:3002'
-        : process.env.REACT_APP_WS_ENDPOINT;
 
-    const newSocket = io(socketUrl, {
-      query: { userId: newUserId },
-    });
+    const newSocket = io(
+      process.env.REACT_APP_WS_ENDPOINT || 'http://localhost:3002',
+      {
+        query: { userId: newUserId },
+      },
+    );
     setSocket(newSocket);
     setUserId(newUserId);
   };
