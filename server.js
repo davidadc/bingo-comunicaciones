@@ -92,7 +92,10 @@ const getBingoNumberInterval = () => {
     io.sockets.emit('bingo:callNumber', encryptData(number));
   };
 
-  bingoNumberInterval = setInterval(() => getNumberAndEmit(), 10000);
+  bingoNumberInterval = setInterval(
+    () => getNumberAndEmit(),
+    process.env.CALL_BINGO_INTERVAL || 10000,
+  );
 };
 
 const getBingoStartTimerInterval = () => {
