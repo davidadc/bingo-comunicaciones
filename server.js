@@ -224,6 +224,9 @@ io.on('connection', (socket) => {
         selectedCards.splice(index, 1);
 
         delete selectedCardsMapped[socket.data.userId];
+
+        console.log('User ID', socket?.data?.userId, 'disconnected');
+        console.log('IP', socket.handshake.address, 'disconnected');
       } catch (e) {
         console.log(e);
       }
